@@ -11,7 +11,7 @@ Text classification projects.         To be continued
    > 使用CNN对文本进行编码分类。采用字为单位的embedding方式，对文本进行编码，当然可以考虑分词之后进行词的embedding。
    > 或者将两者concat作为输入。
    
-   [文件夹](CNN_text_classification/)中有模型说明notebook，[source_code](CNN_text_classification/source_code/)包含了代码和结果。[helper](CNN_text_classification/source_code/helper/)文件夹中有raw data数据处理的script。训练模型运行[run_cnn.py](CNN_text_classification/source_code/helper/run_cnn.py)
+   [文件夹](CNN_text_classification/)中有模型说明notebook，[source_code](CNN_text_classification/source_code/)包含了代码和结果。[helper](CNN_text_classification/source_code/helper/)文件夹中有raw data数据处理的script。训练模型运行[run_cnn.py](CNN_text_classification/source_code/run_cnn.py)
    运行结果如下：
    > ![pic](pic/pic.png)
    
@@ -19,7 +19,7 @@ Text classification projects.         To be continued
 ### 3. [RNN文本分类](RNN_text_classification/)
    > 使用LSTM对文本进行编码分类。采用字为单位的embedding方式，采用多层LSTM最后一个time step的输出作为文本的编码。
    
-   [文件夹](RNN_text_classification/)中有模型说明notebook，[source_code](RNN_text_classification/source_code/)包含了代码和结果。[helper](RNN_text_classification/source_code/helper/)文件夹中有raw data数据处理的script。训练模型运行[run_cnn.py](RNN_text_classification/source_code/helper/run_cnn.py)。  
+   [文件夹](RNN_text_classification/)中有模型说明notebook，[source_code](RNN_text_classification/source_code/)包含了代码和结果。[helper](RNN_text_classification/source_code/helper/)文件夹中有raw data数据处理的script。训练模型运行[run_cnn.py](RNN_text_classification/source_code/run_cnn.py)。  
    [LSTM layer code](RNN_text_classification/lstm_layer_implement.py)为手写LSTM层代码。
    
    运行结果如下：
