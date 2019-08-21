@@ -26,11 +26,11 @@ Text classification projects.         To be continued
    > ![pic2](pic/pic2.png)  
 
 ***
-### 3. [HAN文本分类](HAN_text_classification/)
+### 4. [HAN文本分类](HAN_text_classification/)
    使用TensorFlow完成模型构建，详细见[source code folder](HAN_text_classification/)。
-   > ![pic](pic/pic3.png)
+   > ![pic](pic/pic3.png)  
    > 模型参数可以进一步调整
 
 ***
-### 4. [Naive Bayes文本分类](NB_classification/)
+### 5. [Naive Bayes文本分类](NB_classification/)
    > Naive Bayes分类使用sklearn中的算法，相对简单，分类效果不理想，受数据集较小的影响，同时有优化的空间。可在分类时，只关注TopK的词，或者数据分析得出某一区间内的具有区分度的词，还可以转化log bayes公式计算。[语种检测任务练习](NB_classification/Language-Detector(Exercise)/)有较好的效果，当然其数据本身的区分度就相对较大。
