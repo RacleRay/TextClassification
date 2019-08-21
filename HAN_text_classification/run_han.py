@@ -181,8 +181,15 @@ def test():
     for i in range(num_batch):  # 逐批次处理
         start_id = i * batch_size
         end_id = min((i + 1) * batch_size, data_len)
+        batch_len = len(x_test[start_id:end_id])
+        x_batch = np.reshape(x_test[start_id:end_id], (batch_len, int(config.seq_length/30), 30))
+        word_lengths = np.zeros((batch_len, int(config.seq_length/30))) + 30
+        sentence_lengths = np.zeros((batch_len,)) + int(config.seq_length/30)
+
         feed_dict = {
-            model.input_x: x_test[start_id:end_id],
+            model.inputs: x_batch,
+            model.word_lengths: word_lengths,
+            model.sentence_lengths: sentence_lengths,
             model.keep_prob: 1.0
         }
         y_pred_cls[start_id:end_id] = session.run(model.y_pred_cls, feed_dict=feed_dict)
@@ -214,8 +221,6 @@ if __name__ == '__main__':
 
     option='train'
     if option == 'train':
-        config.is_training = True
         train()
     else:
-        config.is_training = False
         test()
