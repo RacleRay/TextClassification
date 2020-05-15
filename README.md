@@ -13,6 +13,7 @@ Text classification projects.         To be continued
    > ref: https://github.com/gaussic/text-classification-cnn-rnn
    
    [文件夹](CNN_text_classification/)中有模型说明notebook，[source_code](CNN_text_classification/source_code/)包含了代码和结果。[helper](CNN_text_classification/source_code/helper/)文件夹中有raw data数据处理的script。训练模型运行[run_cnn.py](CNN_text_classification/source_code/run_cnn.py)
+   > 添加multi task cnn network
    运行结果如下：
    > ![pic](pic/pic.png)
    
