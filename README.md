@@ -8,12 +8,12 @@ Text classification projects.         To be continued
 
 ***
 ### 2. [CNN文本分类](CNN_text_classification/)
-   > 使用CNN对文本进行编码分类。采用字为单位的embedding方式，对文本进行编码，当然可以考虑分词之后进行词的embedding。
+   > 使用CNN对文本进行编码分类。采用字为单位的embedding方式，对文本进行编码，可以考虑分词之后进行词的embedding。
    > 或者将两者concat作为输入。
    > ref: https://github.com/gaussic/text-classification-cnn-rnn
    
    [文件夹](CNN_text_classification/)中有模型说明notebook，[source_code](CNN_text_classification/source_code/)包含了代码和结果。[helper](CNN_text_classification/source_code/helper/)文件夹中有raw data数据处理的script。训练模型运行[run_cnn.py](CNN_text_classification/source_code/run_cnn.py)
-   添加[multi task cnn network](CNN_text_classification/source_code/multi_class_cnn.py)。运行需要修改rnn_cnn文件和标签y
+   - 添加[multi task cnn network](CNN_text_classification/source_code/multi_class_cnn.py)。运行需要修改rnn_cnn文件和标签y
    运行结果如下：
    > ![pic](pic/pic.png)
    
