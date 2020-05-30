@@ -38,8 +38,7 @@ def main():
     print(result)
     print(model_outputs)
 
-    predictions, raw_outputs = model.predict(
-        ["This thing is entirely different from the other thing. "])
+    predictions, raw_outputs = model.predict(["这是一个测试语句"])
     print(predictions)
     print(raw_outputs)
 
