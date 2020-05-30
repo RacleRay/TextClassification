@@ -16,12 +16,21 @@ def main():
     eval_csv = "path"
 
     # label is the class representing Int
-    train_df = pd.read_csv(train_csv, names=['label', 'text'], encoding='utf-8')
-    eval_df = process_tsv(eval_csv, names=['label', 'text'], encoding='utf-8')
+    train_df = pd.read_csv(train_csv,
+                           names=['label', 'text'],
+                           encoding='utf-8')
+    eval_df = pd.read_csv(eval_csv, names=['label', 'text'], encoding='utf-8')
 
     # num_labels = number of classes
-    model = MultiBinaryClaRunner('albert', './albert_tiny/', num_labels=5, freez_pretrained=False,
-        args={"reprocess_input_data": True, "overwrite_output_dir": True, "num_train_epochs": 5})
+    model = MultiClassCnnRunner('albert',
+                                './albert_tiny/',
+                                num_labels=5,
+                                freez_pretrained=False,
+                                args={
+                                    "reprocess_input_data": True,
+                                    "overwrite_output_dir": True,
+                                    "num_train_epochs": 5
+                                })
 
     model.train_model(train_df)
 
@@ -29,10 +38,11 @@ def main():
     print(result)
     print(model_outputs)
 
-    predictions, raw_outputs = model.predict(["This thing is entirely different from the other thing. "])
+    predictions, raw_outputs = model.predict(
+        ["This thing is entirely different from the other thing. "])
     print(predictions)
     print(raw_outputs)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()
