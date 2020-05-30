@@ -11,18 +11,16 @@ import logging
 import warnings
 from multiprocessing import cpu_count
 import wandb
+import random
+import numpy as np
 
 import torch
 from base_runner import BaseRunner
 from global_config import global_configs
 
-from models.multi_label_linear import (
-    AlbertForMultiBinaryLabelSeqClassification,
-    BertForMultiBinaryLabelSeqClassification,
-    DistilBertForMultiBinaryLabelSeqClassification,
-    ElectraForMultiBinaryLabelSeqClassification,
-    RobertaForMultiBinaryLabelSeqClassification,
-    XLNetForMultiBinaryLabelSeqClassification,
+from models.multi_class_cnn import (
+    BertCNN,
+    AlbertCNN,
 )
 
 from transformers import (
@@ -50,7 +48,6 @@ logger = logging.getLogger(__name__)
 class CNNConfig:
     num_filters = 512
     kernel_sizes = [3, 4, 5]
-extra_config
 
 
 class MultiClassCnnRunner(BaseRunner):
@@ -64,8 +61,8 @@ class MultiClassCnnRunner(BaseRunner):
         use_cuda=True,
         cuda_device=-1,
         freez_pretrained=False,
-        **kwargs,
-        ):
+        **kwargs
+    ):
         """
         Args:
             model_type: MODEL_CLASSES中的模型名称，bert，xlnet，roberta，distilbert，albert，electra
@@ -85,16 +82,16 @@ class MultiClassCnnRunner(BaseRunner):
             **kwargs (optional): 传入transformers的from_pretrained方法的参数
         """
         MODEL_CLASSES = {
-            "bert": (BertConfig, BertForMultiBinaryLabelSeqClassification, BertTokenizer),
-            "xlnet": (XLNetConfig, XLNetForMultiBinaryLabelSeqClassification, XLNetTokenizer),
-            "roberta": (RobertaConfig, RobertaForMultiBinaryLabelSeqClassification, RobertaTokenizer),
-            "distilbert": (DistilBertConfig, DistilBertForMultiBinaryLabelSeqClassification, DistilBertTokenizer),
-            # "albert": (AlbertConfig, AlbertForMultiBinaryLabelSeqClassification, AlbertTokenizer),
+            "bert": (BertConfig, BertCNN, BertTokenizer),
+            # "albert": (AlbertConfig, AlbertCNN, AlbertTokenizer),
             # 由于 albert_chinese_* 模型没有用 sentencepiece.
             # 用AlbertTokenizer加载不了词表，因此需要改用BertTokenizer
             # https://huggingface.co/voidful/albert_chinese_xxlarge
-            "albert": (AlbertConfig, AlbertForMultiBinaryLabelSeqClassification, BertTokenizer),
-            "electra": (ElectraConfig, ElectraForMultiBinaryLabelSeqClassification, ElectraTokenizer),
+            "albert": (AlbertConfig, AlbertCNN, BertTokenizer),
+            # "xlnet": (XLNetConfig, XLNetForMultiBinaryLabelSeqClassification, XLNetTokenizer),
+            # "roberta": (RobertaConfig, RobertaForMultiBinaryLabelSeqClassification, RobertaTokenizer),
+            # "distilbert": (DistilBertConfig, DistilBertForMultiBinaryLabelSeqClassification, DistilBertTokenizer),
+            # "electra": (ElectraConfig, ElectraForMultiBinaryLabelSeqClassification, ElectraTokenizer),
         }
 
         if args and "manual_seed" in args:
@@ -113,7 +110,7 @@ class MultiClassCnnRunner(BaseRunner):
             "stride": 0.8,
             "regression": False,
             "threshold": 0.5
-            }
+        }
         # NOTE: threshold，在预测predict方法中使用，如果是multi_label的问题，threshold是一个 list。
 
         self.args.update(global_configs)
@@ -173,7 +170,7 @@ class MultiClassCnnRunner(BaseRunner):
         # TODO: 初始化预训练模型的tokenizer
         self.tokenizer = tokenizer_class.from_pretrained(
             model_file, do_lower_case=self.args["do_lower_case"], **kwargs
-            )
+        )
 
         self.args["model_file"] = model_file
         self.args["model_type"] = model_type
@@ -188,7 +185,7 @@ class MultiClassCnnRunner(BaseRunner):
         args=None,
         verbose=True,
         **kwargs,
-        ):
+    ):
         return super().train_model(
             train_df,
             multi_label=multi_label,
@@ -210,8 +207,7 @@ class MultiClassCnnRunner(BaseRunner):
             eval_df, output_dir, multi_label=multi_label, verbose=verbose, silent=silent, **kwargs
         )
 
-    def load_and_cache_examples(
-        self, examples, evaluate=False, no_cache=False, multi_label=False, verbose=True, silent=False):
+    def load_and_cache_examples(self, examples, evaluate=False, no_cache=False, multi_label=False, verbose=True, silent=False):
         return super().load_and_cache_examples(
             examples, evaluate=evaluate, no_cache=no_cache, multi_label=multi_label, verbose=verbose, silent=silent
         )

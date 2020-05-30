@@ -88,7 +88,7 @@ class BertCNN(BertPreTrainedModel):
                             position_ids=position_ids,
                             head_mask=head_mask)
         # cnn
-        last_hidden_state = output[0]
+        last_hidden_state = outputs[0]
         cnn_out = torch.cat([conv(last_hidden_state) for conv in self.convs], 1)
         maxpool_out = self.maxpooling(cnn_out)
         avgpool_out = self.avgpooling(cnn_out)
@@ -96,7 +96,7 @@ class BertCNN(BertPreTrainedModel):
         out = self.linear(out)
 
         # linear
-        pooler_output = output[1]
+        pooled_output = outputs[1]
         pooled_output = self.dropout(pooled_output)
         linear_out = self.classifier(pooled_output)
 
@@ -166,7 +166,7 @@ class AlbertCNN(BertPreTrainedModel):
                             position_ids=position_ids,
                             head_mask=head_mask)
         # cnn
-        last_hidden_state = output[0]
+        last_hidden_state = outputs[0]
         cnn_out = torch.cat([conv(last_hidden_state) for conv in self.convs], 1)
         maxpool_out = self.maxpooling(cnn_out)
         avgpool_out = self.avgpooling(cnn_out)
@@ -174,7 +174,7 @@ class AlbertCNN(BertPreTrainedModel):
         out = self.linear(out)
 
         # linear
-        pooler_output = output[1]
+        pooled_output = outputs[1]
         pooled_output = self.dropout(pooled_output)
         linear_out = self.classifier(pooled_output)
 

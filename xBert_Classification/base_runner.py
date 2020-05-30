@@ -29,7 +29,7 @@ from transformers import (
   DistilBertForSequenceClassification,
   RobertaForSequenceClassification,
   XLNetForSequenceClassification
-  )
+)
 
 from transformers import (
   WEIGHTS_NAME,
@@ -49,7 +49,7 @@ from transformers import (
   get_linear_schedule_with_warmup,
 )
 
-from models.custom_classification import ElectraForSequenceClassification
+from models.multi_label_linear import ElectraForSequenceClassification
 
 from base_utils import InputExample, convert_examples_to_features
 from global_config import global_configs
@@ -91,16 +91,16 @@ class BaseRunner:
         **kwargs (optional): 传入transformers的from_pretrained方法的参数
     """
     MODEL_CLASSES = {
-        "bert": (BertConfig, BertForMultiBinaryLabelSequenceClassification, BertTokenizer),
-        "xlnet": (XLNetConfig, XLNetForMultiBinaryLabelSequenceClassification, XLNetTokenizer),
-        "roberta": (RobertaConfig, RobertaForMultiBinaryLabelSequenceClassification, RobertaTokenizer),
-        "distilbert": (DistilBertConfig, DistilBertForMultiBinaryLabelSequenceClassification, DistilBertTokenizer),
+        "bert": (BertConfig, BertForSequenceClassification, BertTokenizer),
+        "xlnet": (XLNetConfig, XLNetForSequenceClassification, XLNetTokenizer),
+        "roberta": (RobertaConfig, RobertaForSequenceClassification, RobertaTokenizer),
+        "distilbert": (DistilBertConfig, DistilBertForSequenceClassification, DistilBertTokenizer),
         # "albert": (AlbertConfig, AlbertForMultiBinaryLabelSequenceClassification, AlbertTokenizer),
         # 由于 albert_chinese_* 模型没有用 sentencepiece.
         # 用AlbertTokenizer加载不了词表，因此需要改用BertTokenizer
         # https://huggingface.co/voidful/albert_chinese_xxlarge
-        "albert": (AlbertConfig, AlbertForMultiBinaryLabelSequenceClassification, BertTokenizer),
-        "electra": (ElectraConfig, ElectraForMultiBinaryLabelSequenceClassification, ElectraTokenizer),
+        "albert": (AlbertConfig, AlbertForSequenceClassification, BertTokenizer),
+        "electra": (ElectraConfig, ElectraForSequenceClassification, ElectraTokenizer),
     }
 
     if args and "manual_seed" in args:
@@ -167,7 +167,7 @@ class BaseRunner:
     # TODO: 初始化预训练模型的tokenizer
     self.tokenizer = tokenizer_class.from_pretrained(
         model_file, do_lower_case=self.args["do_lower_case"], **kwargs
-        )
+    )
 
     self.args["model_file"] = model_file
     self.args["model_type"] = model_type

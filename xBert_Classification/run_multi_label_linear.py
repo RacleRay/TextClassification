@@ -10,7 +10,7 @@
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
-from xbert_multi_label_linear_runner.py import MultiBinaryClaRunner
+from xbert_multi_label_linear_runner import MultiBinaryClaRunner
 
 
 def process_tsv(file):
@@ -31,8 +31,15 @@ def main():
     eval_df = process_tsv('val.tsv')
 
     # num_labels = kind of labels * classes of each label
-    model = MultiBinaryClaRunner('albert', './albert_large/', num_labels=80, freez_pretrained=False,
-        args={"reprocess_input_data": False, "overwrite_output_dir": False, "num_train_epochs": 5})
+    model = MultiBinaryClaRunner('albert',
+                                 './albert_large/',
+                                 num_labels=80,
+                                 freez_pretrained=False,
+                                 args={
+                                     "reprocess_input_data": False,
+                                     "overwrite_output_dir": False,
+                                     "num_train_epochs": 5
+                                 })
 
     model.train_model(train_df)
 
@@ -40,10 +47,11 @@ def main():
     print(result)
     print(model_outputs)
 
-    predictions, raw_outputs = model.predict(["This thing is entirely different from the other thing. "])
+    predictions, raw_outputs = model.predict(
+        ["This thing is entirely different from the other thing. "])
     print(predictions)
     print(raw_outputs)
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     main()

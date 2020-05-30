@@ -10,7 +10,9 @@
 import logging
 import warnings
 from multiprocessing import cpu_count
+import random
 import wandb
+import numpy as np
 
 import torch
 from base_runner import BaseRunner
@@ -59,7 +61,7 @@ class MultiBinaryClaRunner(BaseRunner):
         cuda_device=-1,
         freez_pretrained=False,
         **kwargs,
-        ):
+    ):
         """
         针对Multi label，使用bert + linear分类. Multi label中每一种label one-hot化，计算Binary Cross Entropy loss. 每一种label只有0 1两种取值，不用onehot。
 
@@ -109,7 +111,7 @@ class MultiBinaryClaRunner(BaseRunner):
             "stride": 0.8,
             "regression": False,
             "threshold": 0.5
-            }
+        }
         # NOTE: threshold，在预测predict方法中使用，如果是multi_label的问题，threshold是一个 list。
 
         self.args.update(global_configs)
@@ -165,7 +167,7 @@ class MultiBinaryClaRunner(BaseRunner):
         # TODO: 初始化预训练模型的tokenizer
         self.tokenizer = tokenizer_class.from_pretrained(
             model_file, do_lower_case=self.args["do_lower_case"], **kwargs
-            )
+        )
 
         self.args["model_file"] = model_file
         self.args["model_type"] = model_type
@@ -180,7 +182,7 @@ class MultiBinaryClaRunner(BaseRunner):
         args=None,
         verbose=True,
         **kwargs,
-        ):
+    ):
         return super().train_model(
             train_df,
             multi_label=multi_label,
@@ -203,8 +205,7 @@ class MultiBinaryClaRunner(BaseRunner):
             eval_df, output_dir, multi_label=multi_label, verbose=verbose, silent=silent, **kwargs
         )
 
-    def load_and_cache_examples(
-        self, examples, evaluate=False, no_cache=False, multi_label=True, verbose=True, silent=False):
+    def load_and_cache_examples(self, examples, evaluate=False, no_cache=False, multi_label=True, verbose=True, silent=False):
         return super().load_and_cache_examples(
             examples, evaluate=evaluate, no_cache=no_cache, multi_label=multi_label, verbose=verbose, silent=silent
         )
