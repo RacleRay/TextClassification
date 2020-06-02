@@ -71,10 +71,10 @@ def gen_eda_pair(train_orig, output_file, alpha, num_aug=8):
 
 
 
-def gen_eda_single(train_orig, output_file, alpha, num_aug=9):
+def gen_eda_single(train_orig, output_file, alpha, num_aug=8):
     "根据输入文件格式调整内容。单句。"
     lines = pd.read_csv(train_orig)
-    out = open(output_file,"a", newline="")
+    out = open(output_file,"a", newline="", encoding='utf-8')
 
     csv_write = csv.writer(out)
     csv_write.writerow(['sentence','category'])
@@ -100,5 +100,5 @@ def gen_eda_single(train_orig, output_file, alpha, num_aug=9):
 
 
 if __name__ == "__main__":
-    # gen_eda_pair(args.input, output, alpha=args.alpha, num_aug=args.num_aug)
-    gen_eda_single(args.input, output, alpha=args.alpha, num_aug=args.num_aug)
+    # gen_eda_pair(args.input, args.output, alpha=args.alpha, num_aug=args.num_aug)
+    gen_eda_single(args.input, args.output, alpha=args.alpha, num_aug=args.num_aug)

@@ -103,7 +103,7 @@ def clean_sentence(sent):
     sent = sent.replace('\n', '').replace('\t', '').replace('\u3000', '')
     # 删除对断句没有帮助的符号
     pattern_1 = re.compile(
-        r"\(|\)|（|）|\"|“|”|\*|《|》|<|>|&|#|~|·|`|=|\+|\}|\{|\||、|｛|｝")
+        r"\(|\)|（|）|\"|“|”|\*|《|》|<|>|&|#|~|·|`|=|\+|\}|\{|\||、|｛|｝|「|」|『|』|【|】|〔|〕|〖|〗|〘|〙|〚|〛|〿|–—|…|‧|﹏|")
     sent = re.sub(pattern_1, "", sent)
     # 断句符号统一为中文符号
     sent = re.sub(r"!", "！", sent)
@@ -115,6 +115,7 @@ def clean_sentence(sent):
     # 去除邮箱地址
     sent = re.sub(r"\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*", "", sent)
 
+    sent = re.sub(r"@", "", sent)
     sent = sent.replace(' ', '').lower()
     return sent
 
