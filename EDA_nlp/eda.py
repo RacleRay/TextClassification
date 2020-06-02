@@ -90,7 +90,7 @@ class EDAnlp:
         shuffle(augmented_sentences)
         # trim so that we have the desired number of augmented sentences
         if num_aug >= 1:
-            augmented_sentences = augmented_sentences[:num_aug]
+            augmented_sentences = augmented_sentences[:num_aug + 1]
         else:
             keep_prob = num_aug
             augmented_sentences = [
