@@ -25,16 +25,14 @@ from transformers import (
     ElectraModel,
     ElectraPreTrainedModel,
 )
-from transformers.modeling_roberta import RobertaClassificationHead, ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
-from transformers.modeling_distilbert import DISTILBERT_PRETRAINED_MODEL_ARCHIVE_MAP
-from transformers.modeling_electra import ELECTRA_PRETRAINED_MODEL_ARCHIVE_MAP
+from transformers.modeling_roberta import RobertaClassificationHead
 from transformers.modeling_utils import SequenceSummary
 
 
 class BertForMultiBinaryLabelSeqClassification(BertPreTrainedModel):
     """Bert model adapted for multi-label sequence classification.
     Every label is binary class."""
-    def __init__(self, config, freez_prrtrained=False, weight=None):
+    def __init__(self, config, freez_pretrained=False, weight=None):
         "weight: 各个label样本中正例的比例，len==num_labels"
         super(BertForMultiBinaryLabelSeqClassification, self).__init__(config)
         self.num_labels = config.num_labels
@@ -43,7 +41,7 @@ class BertForMultiBinaryLabelSeqClassification(BertPreTrainedModel):
         self.classifier = nn.Linear(config.hidden_size, self.config.num_labels)
         self.weight = weight
         self.init_weights()
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.bert.parameters():
                 param.requires_grad = False
 
@@ -87,7 +85,7 @@ class BertForMultiBinaryLabelSeqClassification(BertPreTrainedModel):
 class AlbertForMultiBinaryLabelSeqClassification(AlbertPreTrainedModel):
     """Alber model adapted for multi-label sequence classification.
     Every label is binary class."""
-    def __init__(self, config, freez_prrtrained=False, weight=None):
+    def __init__(self, config, freez_pretrained=False, weight=None):
         super(AlbertForMultiBinaryLabelSeqClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.weight = weight
@@ -95,9 +93,11 @@ class AlbertForMultiBinaryLabelSeqClassification(AlbertPreTrainedModel):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.classifier = nn.Linear(config.hidden_size, self.config.num_labels)
         self.init_weights()
-        if freez_prrtrained:
+        print("Freeze参数：", freez_pretrained)
+        if freez_pretrained:
             for param in self.albert.parameters():
                 param.requires_grad = False
+                # print(param.requires_grad)
 
     def forward(
         self,
@@ -151,7 +151,6 @@ class DistilBertPreTrainedModel(PreTrainedModel):
     """
 
     config_class = DistilBertConfig
-    pretrained_model_archive_map = DISTILBERT_PRETRAINED_MODEL_ARCHIVE_MAP
     load_tf_weights = None
     base_model_prefix = "distilbert"
 
@@ -175,7 +174,7 @@ class DistilBertForMultiBinaryLabelSeqClassification(DistilBertPreTrainedModel):
     Every label is binary class.
     """
 
-    def __init__(self, config, freez_prrtrained=False, weight=None):
+    def __init__(self, config, freez_pretrained=False, weight=None):
         super(DistilBertForMultiBinaryLabelSeqClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.weight = weight
@@ -184,7 +183,7 @@ class DistilBertForMultiBinaryLabelSeqClassification(DistilBertPreTrainedModel):
         self.classifier = nn.Linear(config.dim, config.num_labels)
         self.dropout = nn.Dropout(config.seq_classif_dropout)
         self.init_weights()
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.distilbert.parameters():
                 param.requires_grad = False
 
@@ -221,15 +220,16 @@ class XLNetForMultiBinaryLabelSeqClassification(XLNetPreTrainedModel):
     Every label is binary class.
     """
 
-    def __init__(self, config, freez_prrtrained=False, weight=None):
+    def __init__(self, config, freez_pretrained=False, weight=None):
         super(XLNetForMultiBinaryLabelSeqClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.weight = weight
         self.transformer = XLNetModel(config)
-        self.sequence_summary = SequenceSummary(config)  # identity or other mapping.
+        # Compute a single vector summary of a sequence hidden states according to various possibilities
+        self.sequence_summary = SequenceSummary(config)
         self.logits_proj = nn.Linear(config.d_model, config.num_labels)
         self.init_weights()
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.transformer.parameters():
                 param.requires_grad = False
 
@@ -286,16 +286,15 @@ class RobertaForMultiBinaryLabelSeqClassification(BertPreTrainedModel):
     """
 
     config_class = RobertaConfig
-    pretrained_model_archive_map = ROBERTA_PRETRAINED_MODEL_ARCHIVE_MAP
     base_model_prefix = "roberta"
 
-    def __init__(self, config, freez_prrtrained=False, weight=None):
+    def __init__(self, config, freez_pretrained=False, weight=None):
         super(RobertaForMultiBinaryLabelSeqClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.weight = weight
         self.roberta = RobertaModel(config)
         self.classifier = RobertaClassificationHead(config)
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.roberta.parameters():
                 param.requires_grad = False
 
@@ -387,10 +386,9 @@ class ElectraForSequenceClassification(ElectraPreTrainedModel):
             Attentions weights after the attention softmax, used to compute the weighted average in the self-attention heads.
     """
     config_class = ElectraConfig
-    pretrained_model_archive_map = ELECTRA_PRETRAINED_MODEL_ARCHIVE_MAP
     base_model_prefix = "electra"
 
-    def __init__(self, config, freez_prrtrained=False, weight=None):
+    def __init__(self, config, freez_pretrained=False, weight=None):
         super().__init__(config)
         self.num_labels = config.num_labels
         self.electra = ElectraModel(config)
@@ -398,7 +396,7 @@ class ElectraForSequenceClassification(ElectraPreTrainedModel):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.classifier = nn.Linear(config.hidden_size, self.config.num_labels)
         self.weight = weight
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.electra.parameters():
                 param.requires_grad = False
 
@@ -445,10 +443,9 @@ class ElectraForMultiBinaryLabelSeqClassification(ElectraPreTrainedModel):
     """
 
     config_class = ElectraConfig
-    pretrained_model_archive_map = ELECTRA_PRETRAINED_MODEL_ARCHIVE_MAP
     base_model_prefix = "electra"
 
-    def __init__(self, config, freez_prrtrained=False, weight=None):
+    def __init__(self, config, freez_pretrained=False, weight=None):
         super(ElectraForMultiBinaryLabelSeqClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.weight = weight
@@ -456,7 +453,7 @@ class ElectraForMultiBinaryLabelSeqClassification(ElectraPreTrainedModel):
         self.pooler = ElectraPooler(config)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.classifier = nn.Linear(config.hidden_size, self.config.num_labels)
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.electra.parameters():
                 param.requires_grad = False
 

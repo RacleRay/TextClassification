@@ -43,7 +43,7 @@ class BertCNN(BertPreTrainedModel):
     def __init__(self,
                  config,
                  extra_config,
-                 freez_prrtrained=False,
+                 freez_pretrained=False,
                  weight=None):
         "weight: 各个label样本中正例的比例，len==num_labels"
         super(BertCNN, self).__init__(config)
@@ -62,7 +62,7 @@ class BertCNN(BertPreTrainedModel):
         self.classifier = nn.Linear(config.hidden_size, self.num_labels)
         self.weight = weight
         self.init_weights()
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.albert.parameters():
                 param.requires_grad = False
 
@@ -121,7 +121,7 @@ class AlbertCNN(BertPreTrainedModel):
     def __init__(self,
                  config,
                  extra_config,
-                 freez_prrtrained=False,
+                 freez_pretrained=False,
                  weight=None):
         "weight: 各个label样本中正例的比例，len==num_labels"
         super(AlbertCNN, self).__init__(config)
@@ -140,7 +140,7 @@ class AlbertCNN(BertPreTrainedModel):
         self.classifier = nn.Linear(config.hidden_size, self.num_labels)
         self.weight = weight
         self.init_weights()
-        if freez_prrtrained:
+        if freez_pretrained:
             for param in self.albert.parameters():
                 param.requires_grad = False
 
@@ -150,6 +150,7 @@ class AlbertCNN(BertPreTrainedModel):
                 token_type_ids=None,
                 position_ids=None,
                 head_mask=None,
+                inputs_embeds=None,
                 labels=None):
         # outputs的组成：
         # last_hidden_state： Sequence of hidden-states at the output of the last layer of the model.
@@ -192,5 +193,3 @@ class AlbertCNN(BertPreTrainedModel):
 
         # (loss), logits, (hidden_states), (attentions)
         return outputs
-
-
